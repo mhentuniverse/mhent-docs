@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều khoản Dịch vụ - MHEnt. Docs</title>
+    <link rel="icon" type="image/png" href="https://mhentuniverse.com/assets/icon-web.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+        }
+        body.dark-mode {
+            --bg-page: #0f172a;
+            --bg-sidebar: #1e293b;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #38bdf8;
+            --accent-hover: #0284c7;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); color: var(--text-main); line-height: 1.6; display: flex; min-height: 100vh; }
+        
+        /* Sidebar Wiki Style */
+        .sidebar { width: 280px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); padding: 24px 16px; position: fixed; height: 100vh; overflow-y: auto; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; margin-bottom: 32px; padding-left: 8px; color: var(--text-main); text-decoration: none; }
+        .brand img { width: 32px; height: 32px; border-radius: 6px; }
+        .nav-title { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin: 16px 0 8px 8px; letter-spacing: 0.5px; }
+        .nav-list { list-style: none; }
+        .nav-item a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+        .nav-item a:hover, .nav-item a.active { background-color: rgba(56, 189, 248, 0.1); color: var(--accent-color); font-weight: 600; }
+        
+        /* Main Content Area */
+        .main-content { margin-left: 280px; flex: 1; padding: 40px; max-width: 900px; }
+        .top-bar { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+        .btn-theme { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        
+        /* Typography Wiki */
+        h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; }
+        .meta-info { font-size: 13px; color: var(--text-muted); margin-bottom: 32px; }
+        .alert-box { background-color: rgba(37, 99, 235, 0.05); border-left: 4px solid var(--accent-color); padding: 16px; border-radius: 0 6px 6px 0; margin-bottom: 32px; font-size: 14px; }
+        section { margin-bottom: 32px; }
+        h2 { font-size: 20px; font-weight: 600; margin-bottom: 12px; color: var(--accent-color); }
+        p { margin-bottom: 12px; color: var(--text-main); font-size: 15px; }
+        ul { margin-left: 20px; margin-bottom: 16px; font-size: 15px; }
+        li { margin-bottom: 6px; }
+        
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .main-content { margin-left: 0; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="https://mhentuniverse.com" class="brand">
+            <img src="https://mhentuniverse.com/assets/avt-web.jpg" alt="Logo">
+            <span>MHEnt. Docs</span>
+        </a>
+        <div class="nav-title">Tài liệu Pháp lý</div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/terms" class="active"><i class="fa-solid fa-file-contract"></i> Điều khoản Dịch vụ</a></li>
+            <li class="nav-item"><a href="/privacy"><i class="fa-solid fa-shield-halved"></i> Chính sách Bảo mật</a></li>
+        </ul>
+        <div class="nav-title">Hệ sinh thái</div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="https://mhentuniverse.com"><i class="fa-solid fa-house"></i> Trở về Đại Sảnh</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-bar">
+            <button class="btn-theme" onclick="toggleDarkMode()">
+                <i class="fa-solid fa-moon"></i> Giao diện Tối/Sáng
+            </button>
+        </div>
+
+        <h1>Điều Khoản Dịch Vụ</h1>
+        <div class="meta-info">Cập nhật lần cuối: 15 Tháng 07, 2026 | Phiên bản: 2.0</div>
+
+        <div class="alert-box">
+            <strong><i class="fa-solid fa-circle-info"></i> Lưu ý:</strong> Tài liệu này là thỏa thuận pháp lý giữa bạn và Miyazaki Haruto Entertainment Co., Ltd. Việc truy cập và sử dụng các dịch vụ trong hệ sinh thái đồng nghĩa với việc bạn chấp nhận các điều khoản dưới đây.
+        </div>
+
+        <section>
+            <h2>1. Giới thiệu & Quy định Tài khoản</h2>
+            <p><strong>1.1. Phạm vi áp dụng:</strong> Điều khoản này áp dụng cho toàn bộ các nền tảng thuộc MHEnt. Universe bao gồm Đại Sảnh, Cinema, Arena, Edu và các phân hệ mở rộng khác.</p>
+            <p><strong>1.2. Bảo mật tài khoản:</strong> Người dùng phải tự chịu trách nhiệm bảo vệ thông tin đăng nhập Google/Firebase của mình. Chúng tớ từ chối trách nhiệm đối với các rủi ro phát sinh do bạn làm lộ thông tin tài khoản.</p>
+        </section>
+
+        <section>
+            <h2>2. Giới hạn Độ tuổi & Nội dung RTA (18+)</h2>
+            <p><strong>2.1. Độ tuổi tối thiểu:</strong> Dịch vụ yêu cầu người dùng từ 13 tuổi trở lên. Trẻ em dưới 13 tuổi cần có sự giám sát trực tiếp của phụ huynh.</p>
+            <p><strong>2.2. Khu vực nhạy cảm:</strong> Một số tiểu mục lưu trữ nội dung người lớn (RTA) sẽ yêu cầu xác nhận độ tuổi. Nghiêm cấm hành vi khai gian tuổi để truy cập vào các khu vực này.</p>
+        </section>
+
+        <section>
+            <h2>3. Tiêu chuẩn Cộng đồng</h2>
+            <p>Để duy trì môi trường lành mạnh, bạn cam kết <strong>KHÔNG</strong> thực hiện các hành vi sau:</p>
+            <ul>
+                <li>Sử dụng công cụ tự động (Bot, Crawler) để khai thác tài nguyên hoặc tấn công từ chối dịch vụ (DDoS) vào hệ thống máy chủ.</li>
+                <li>Gian lận, sử dụng phần mềm thứ ba để can thiệp vào kết quả thi đấu tại MHEnt. Arena.</li>
+                <li>Đăng tải nội dung vi phạm pháp luật Việt Nam, vi phạm thuần phong mỹ tục hoặc xâm phạm đời tư người khác.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Sở hữu Trí tuệ (DMCA)</h2>
+            <p><strong>4.1. Bản quyền nền tảng:</strong> Mã nguồn, thiết kế giao diện (UI/UX) và thương hiệu MHEnt. Universe thuộc sở hữu độc quyền của Miyazaki Haruto Entertainment Co., Ltd.</p>
+            <p><strong>4.2. Bản quyền bản dịch:</strong> Chất xám Việt hóa (Fansub/Translation) thuộc về đội ngũ MHEnt. Nghiêm cấm hành vi sao chép, Re-up nhằm mục đích thương mại khi chưa có sự đồng ý bằng văn bản.</p>
+        </section>
+
+        <section>
+            <h2>5. Miễn trừ Trách nhiệm</h2>
+            <p>Hệ thống được cung cấp trên cơ sở "nguyên trạng" (As-is). Chúng tớ luôn nỗ lực tối ưu hóa hạ tầng nhưng không bảo đảm hệ thống sẽ hoạt động liên tục 100% không gián đoạn hoặc không có lỗi kỹ thuật phát sinh.</p>
+        </section>
+    </main>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('mhent_docs_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('mhent_docs_theme') === 'dark') document.body.classList.add('dark-mode');
+    </script>
+</body>
+</html>
