@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<!-- Kiểm tra Dark Mode ngay lập tức trước khi Render để tránh chớp trắng (Anti-FOUC) -->
+    <script>
+        (function() {
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+                return match ? decodeURIComponent(match[3]) : null;
+            }
+            const saved = localStorage.getItem('mhent_dark_mode') || getCookie('mhent_dark_mode');
+            const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'on' || (!saved && systemDark)) {
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cổng Tài Liệu & Pháp Lý - MHEnt. Docs</title>
@@ -18,7 +34,7 @@
             --accent-color: #2563eb;
             --accent-hover: #1d4ed8;
         }
-        body.dark-mode {
+        html.dark-mode, body.dark-mode {
             --bg-page: #0f172a;
             --bg-sidebar: #1e293b;
             --bg-card: #1e293b;
@@ -114,11 +130,17 @@
     </main>
 
     <script>
-        function toggleDarkMode() {
+                function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
-            localStorage.setItem('mhent_docs_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            document.documentElement.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('mhent_docs_theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('mhent_dark_mode', isDark ? 'on' : 'off');
+            document.cookie = `mhent_dark_mode=${isDark ? 'on' : 'off'}; domain=.mhentuniverse.com; path=/; max-age=31536000; SameSite=Lax`;
         }
-        if (localStorage.getItem('mhent_docs_theme') === 'dark') document.body.classList.add('dark-mode');
+        if (document.documentElement.classList.contains('dark-mode') || localStorage.getItem('mhent_dark_mode') === 'on' || localStorage.getItem('mhent_docs_theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
     </script>
 </body>
 </html>
