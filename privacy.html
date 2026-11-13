@@ -19,7 +19,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Điều khoản Dịch vụ - MHEnt. Docs</title>
+    <title>Chính Sách Bảo Mật - MHEnt. Docs</title>
     <link rel="icon" type="image/png" href="https://mhentuniverse.com/assets/icon-web.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -104,7 +104,7 @@
         </div>
 
         <h1>Chính Sách Bảo Mật & Dữ Liệu</h1>
-        <div class="meta-info">Cập nhật lần cuối: 15 Tháng 07, 2026 | Phiên bản: 2.0</div>
+        <div class="meta-info">Cập nhật lần cuối: 13 Tháng 11, 2026 | Phiên bản: 2.1 (Tích Hợp Discord OAuth2)</div>
 
         <div class="alert-box">
             <strong><i class="fa-solid fa-shield-halved"></i> Cam kết:</strong> MHEnt. Universe tôn trọng quyền riêng tư của bạn. Chúng tớ tuân thủ nghiêm ngặt các nguyên tắc bảo vệ dữ liệu cá nhân theo quy định pháp luật.
@@ -120,22 +120,39 @@
         </section>
 
         <section>
-            <h2>2. Mục đích Sử dụng Dữ liệu</h2>
-            <p>Dữ liệu của bạn được duy trì виключно (duy nhất) cho các mục đích: Duy trì phiên đăng nhập liên tục; cá nhân hóa trải nghiệm UI/UX; và hỗ trợ khôi phục tài khoản khi xảy ra sự cố kỹ thuật.</p>
+            <h2>2. Tích Hợp Nền Tảng Bên Thứ Ba (Discord Application & OAuth2)</h2>
+            <p>Khi bạn lựa chọn liên kết tài khoản Discord với hệ thống MHEnt. Universe ID qua giao thức OAuth2 (Client ID: <code>1570699759319126037</code>):</p>
+            <ul>
+                <li><strong>Phạm vi truy cập (Scope):</strong> Ứng dụng chỉ yêu cầu phạm vi tối thiểu là <code>identify</code> (Bao gồm: Mã số định danh Discord ID, Tên người dùng Discord, Tên hiển thị toàn cầu và Ảnh đại diện Avatar công khai).</li>
+                <li><strong>Mục đích sử dụng:</strong> Dữ liệu Discord chỉ được sử dụng để:
+                    <ol style="margin-left: 20px; margin-top: 6px;">
+                        <li>Đồng bộ và xác nhận quyền sở hữu danh tính tại Cổng Định Danh MHEnt ID (<code>accounts.mhentuniverse.com</code>).</li>
+                        <li>Hiển thị trạng thái hoạt động học tập, luyện thẻ 3D và nghe nhạc Rich Presence (Activity) trên hồ sơ Discord cá nhân của bạn.</li>
+                        <li>Ghi nhận thành tích học tập và tự động cấp vai trò (Linked Roles) trong máy chủ Discord chính thức của MHEnt Universe.</li>
+                    </ol>
+                </li>
+                <li><strong>Bảo mật & Quyền riêng tư:</strong> Chúng tôi <strong>tuyệt đối KHÔNG</strong> truy cập hay lưu trữ mật khẩu Discord, nội dung tin nhắn riêng tư, danh sách bạn bè, hoặc thông tin thanh toán của bạn.</li>
+                <li><strong>Quyền hủy liên kết:</strong> Bạn có quyền ngắt kết nối tài khoản Discord bất kỳ lúc nào trực tiếp tại Cổng Định Danh MHEnt ID (nút <em>"Hủy liên kết"</em>) hoặc từ trang quản lý <em>User Settings &gt; Authorized Apps</em> trên ứng dụng Discord. Toàn bộ thông tin liên kết sẽ được gỡ bỏ ngay lập tức.</li>
+            </ul>
         </section>
 
         <section>
-            <h2>3. Cookies & Local Storage</h2>
+            <h2>3. Mục đích Sử dụng Dữ liệu</h2>
+            <p>Dữ liệu của bạn được duy trì duy nhất cho các mục đích: Duy trì phiên đăng nhập liên tục; cá nhân hóa trải nghiệm UI/UX; và hỗ trợ khôi phục tài khoản khi xảy ra sự cố kỹ thuật.</p>
+        </section>
+
+        <section>
+            <h2>4. Cookies & Local Storage</h2>
             <p>Chúng tớ sử dụng LocalStorage trên trình duyệt để ghi nhớ tùy chọn Giao diện Tối/Sáng (Dark Mode) và token đăng nhập. MHEnt. Universe cam kết <strong>KHÔNG</strong> sử dụng Cookies theo dõi ngầm để phục vụ quảng cáo vi mô.</p>
         </section>
 
         <section>
-            <h2>4. Chia sẻ Dữ liệu với Bên thứ ba</h2>
-            <p>Chúng tớ cam kết <strong>KHÔNG BÁN, CHO THUÊ HOẶC TRAO ĐỔI</strong> dữ liệu cá nhân của bạn. Dữ liệu chỉ được xử lý trên hạ tầng điện toán đám mây bảo mật của Google Cloud, Firebase và Vercel theo các chuẩn mực bảo mật quốc tế.</p>
+            <h2>5. Chia sẻ Dữ liệu với Bên thứ ba</h2>
+            <p>Chúng tớ cam kết <strong>KHÔNG BÁN, CHO THUÊ HOẶC TRAO ĐỔI</strong> dữ liệu cá nhân của bạn. Dữ liệu chỉ được xử lý trên hạ tầng điện toán đám mây bảo mật của Google Cloud, Firebase, Discord Developer Platform và Vercel theo các chuẩn mực bảo mật quốc tế.</p>
         </section>
 
         <section>
-            <h2>5. Quyền Xóa dữ liệu (Right to be Forgotten)</h2>
+            <h2>6. Quyền Xóa dữ liệu (Right to be Forgotten)</h2>
             <p>Bạn có toàn quyền yêu cầu trích xuất hoặc xóa vĩnh viễn toàn bộ dữ liệu tài khoản của mình khỏi máy chủ của chúng tớ. Yêu cầu vui lòng gửi gửi về Ban Quản Trị qua Email, chúng tớ sẽ hoàn tất quy trình xóa trong vòng 07 ngày làm việc.</p>
         </section>
     </main>
