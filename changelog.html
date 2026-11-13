@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <!-- Kiểm tra Dark Mode ngay lập tức trước khi Render để tránh chớp trắng (Anti-FOUC) -->
+    <script>
+        (function() {
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+                return match ? decodeURIComponent(match[3]) : null;
+            }
+            const saved = localStorage.getItem('mhent_dark_mode') || getCookie('mhent_dark_mode');
+            const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'on' || (!saved && systemDark)) {
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+            }
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhật Ký Phát Hành (Changelog) - MHEnt. Docs</title>
+    <link rel="icon" type="image/png" href="https://mhentuniverse.com/assets/icon-web.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --tag-feat-bg: #ecfdf5;
+            --tag-feat-text: #059669;
+            --tag-feat-border: #a7f3d0;
+            --tag-fix-bg: #fffbeb;
+            --tag-fix-text: #d97706;
+            --tag-fix-border: #fde68a;
+            --tag-sec-bg: #fef2f2;
+            --tag-sec-text: #dc2626;
+            --tag-sec-border: #fecaca;
+            --tag-perf-bg: #f5f3ff;
+            --tag-perf-text: #7c3aed;
+            --tag-perf-border: #ddd6fe;
+            --tag-style-bg: #f0f9ff;
+            --tag-style-text: #0284c7;
+            --tag-style-border: #bae6fd;
+            --tag-refactor-bg: #f8fafc;
+            --tag-refactor-text: #475569;
+            --tag-refactor-border: #cbd5e1;
+        }
+        html.dark-mode, body.dark-mode {
+            --bg-page: #0f172a;
+            --bg-sidebar: #1e293b;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #38bdf8;
+            --accent-hover: #0284c7;
+            --tag-feat-bg: rgba(16, 185, 129, 0.12);
+            --tag-feat-text: #34d399;
+            --tag-feat-border: rgba(16, 185, 129, 0.25);
+            --tag-fix-bg: rgba(245, 158, 11, 0.12);
+            --tag-fix-text: #fbbf24;
+            --tag-fix-border: rgba(245, 158, 11, 0.25);
+            --tag-sec-bg: rgba(239, 68, 68, 0.12);
+            --tag-sec-text: #f87171;
+            --tag-sec-border: rgba(239, 68, 68, 0.25);
+            --tag-perf-bg: rgba(139, 92, 246, 0.12);
+            --tag-perf-text: #a78bfa;
+            --tag-perf-border: rgba(139, 92, 246, 0.25);
+            --tag-style-bg: rgba(56, 189, 248, 0.12);
+            --tag-style-text: #38bdf8;
+            --tag-style-border: rgba(56, 189, 248, 0.25);
+            --tag-refactor-bg: rgba(148, 163, 184, 0.12);
+            --tag-refactor-text: #cbd5e1;
+            --tag-refactor-border: rgba(148, 163, 184, 0.25);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); color: var(--text-main); line-height: 1.6; display: flex; min-height: 100vh; }
+        
+        /* Sidebar Wiki Style */
+        .sidebar { width: 280px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); padding: 24px 16px; position: fixed; height: 100vh; overflow-y: auto; z-index: 10; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; margin-bottom: 32px; padding-left: 8px; color: var(--text-main); text-decoration: none; }
+        .brand img { width: 32px; height: 32px; border-radius: 6px; }
+        .nav-title { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin: 16px 0 8px 8px; letter-spacing: 0.5px; }
+        .nav-list { list-style: none; }
+        .nav-item a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+        .nav-item a:hover, .nav-item a.active { background-color: rgba(56, 189, 248, 0.1); color: var(--accent-color); font-weight: 600; }
+        .badge-ver { margin-left: auto; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 9999px; background: rgba(37, 99, 235, 0.12); color: var(--accent-color); }
+        html.dark-mode .badge-ver { background: rgba(56, 189, 248, 0.18); color: #38bdf8; }
+        
+        /* Main Content Area */
+        .main-content { margin-left: 280px; flex: 1; padding: 40px; max-width: 980px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .breadcrumb { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+        .breadcrumb a { color: inherit; text-decoration: none; }
+        .breadcrumb a:hover { color: var(--accent-color); }
+        .btn-theme { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.2s; }
+        .btn-theme:hover { border-color: var(--accent-color); }
+
+        /* Page Header */
+        .page-header { margin-bottom: 28px; }
+        .page-title { font-size: 30px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .page-desc { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+        /* Repo Selector Tabs */
+        .repo-tabs-container { margin-bottom: 24px; }
+        .repo-tabs-label { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.5px; }
+        .repo-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+        .repo-tab { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-muted); white-space: nowrap; transition: all 0.2s; cursor: pointer; }
+        .repo-tab:hover { border-color: var(--accent-color); color: var(--text-main); }
+        .repo-tab.active { background: var(--accent-color); color: #ffffff; border-color: var(--accent-color); }
+        .repo-tab.active .repo-tab-tag { background: rgba(255, 255, 255, 0.25); color: #ffffff; }
+        .repo-tab-tag { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: rgba(148, 163, 184, 0.15); font-family: 'JetBrains Mono', monospace; }
+        .repo-tab-soon { opacity: 0.65; cursor: default; }
+        .repo-tab-soon:hover { border-color: var(--border-color); color: var(--text-muted); }
+
+        /* Meta Banner Card */
+        .meta-banner { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px 24px; margin-bottom: 28px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        .meta-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+        .meta-repo-name { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
+        .meta-repo-name code { font-family: 'JetBrains Mono', monospace; font-size: 14px; background: rgba(56, 189, 248, 0.1); color: var(--accent-color); padding: 3px 8px; border-radius: 6px; }
+        .meta-badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .badge-live { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 9999px; display: flex; align-items: center; gap: 6px; }
+        html.dark-mode .badge-live { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
+        .badge-pulse { width: 7px; height: 7px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
+        
+        .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; padding-top: 14px; border-top: 1px solid var(--border-color); }
+        .meta-stat { display: flex; flex-direction: column; gap: 2px; }
+        .meta-stat-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; }
+        .meta-stat-val { font-size: 14px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
+        .meta-stat-val code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+        /* Search & Filter Toolbar */
+        .filter-toolbar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px 20px; }
+        .search-box { position: relative; width: 100%; }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; }
+        .search-input { width: 100%; padding: 10px 14px 10px 38px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-page); color: var(--text-main); font-size: 14px; outline: none; transition: all 0.2s; font-family: inherit; }
+        .search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+        .filter-pills { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .filter-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-right: 4px; }
+        .filter-btn { background: none; border: 1px solid var(--border-color); color: var(--text-muted); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+        .filter-btn:hover { border-color: var(--accent-color); color: var(--text-main); }
+        .filter-btn.active { background: var(--accent-color); border-color: var(--accent-color); color: #ffffff; }
+
+        /* Changelog Timeline */
+        .timeline { position: relative; padding-left: 28px; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 12px; bottom: 12px; width: 2px; background: var(--border-color); }
+        
+        .version-card { position: relative; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03); transition: all 0.2s; }
+        .version-card:hover { border-color: var(--accent-color); }
+        .timeline-node { position: absolute; left: -28px; top: 26px; width: 18px; height: 18px; border-radius: 50%; background: var(--bg-card); border: 3px solid var(--accent-color); z-index: 2; }
+        .version-card.is-latest .timeline-node { border-color: #10b981; background: #ecfdf5; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
+        
+        .version-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+        .version-title-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .version-tag { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--accent-color); letter-spacing: -0.5px; }
+        .version-badge-latest { font-size: 11px; font-weight: 700; text-transform: uppercase; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 9999px; }
+        html.dark-mode .version-badge-latest { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
+        .version-badge-stable { font-size: 11px; font-weight: 600; background: rgba(148, 163, 184, 0.15); color: var(--text-muted); padding: 2px 8px; border-radius: 9999px; }
+        
+        .version-date { font-size: 13px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .version-name { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+        .version-summary { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+        
+        /* Change items list */
+        .change-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .change-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.6; color: var(--text-main); }
+        .tag-badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; flex-shrink: 0; letter-spacing: 0.3px; border: 1px solid transparent; }
+        .tag-feat { background: var(--tag-feat-bg); color: var(--tag-feat-text); border-color: var(--tag-feat-border); }
+        .tag-fix { background: var(--tag-fix-bg); color: var(--tag-fix-text); border-color: var(--tag-fix-border); }
+        .tag-security { background: var(--tag-sec-bg); color: var(--tag-sec-text); border-color: var(--tag-sec-border); }
+        .tag-perf { background: var(--tag-perf-bg); color: var(--tag-perf-text); border-color: var(--tag-perf-border); }
+        .tag-style { background: var(--tag-style-bg); color: var(--tag-style-text); border-color: var(--tag-style-border); }
+        .tag-refactor { background: var(--tag-refactor-bg); color: var(--tag-refactor-text); border-color: var(--tag-refactor-border); }
+        
+        .change-text { flex: 1; }
+        .commit-chip { display: inline-flex; align-items: center; gap: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); background: rgba(148, 163, 184, 0.12); padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; text-decoration: none; }
+        .commit-chip:hover { color: var(--accent-color); }
+
+        /* Quick Jump Dropdown */
+        .quick-jump-container { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        .quick-jump-select { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 13px; outline: none; cursor: pointer; font-family: inherit; }
+
+        /* Empty State */
+        .empty-state { display: none; text-align: center; padding: 48px 24px; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 12px; color: var(--text-muted); }
+        .empty-state i { font-size: 32px; margin-bottom: 12px; color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .meta-grid { grid-template-columns: 1fr 1fr; }
+            .version-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="https://docs.mhentuniverse.com" class="brand">
+            <img src="https://mhentuniverse.com/assets/avt-web.jpg" alt="Logo">
+            <span>MHEnt. Docs</span>
+        </a>
+        <div class="nav-title">Tài liệu Pháp lý</div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/terms"><i class="fa-solid fa-file-contract"></i> Điều khoản Dịch vụ</a></li>
+            <li class="nav-item"><a href="/privacy"><i class="fa-solid fa-shield-halved"></i> Chính sách Bảo mật</a></li>
+        </ul>
+        <div class="nav-title">Nhật ký Phát hành</div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/changelog" class="active"><i class="fa-solid fa-clock-rotate-left"></i> MHEnt Universe <span class="badge-ver">v3.0.0</span></a></li>
+        </ul>
+        <div class="nav-title">Hệ sinh thái</div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="https://mhentuniverse.com"><i class="fa-solid fa-house"></i> Trở về Đại Sảnh</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-bar">
+            <div class="breadcrumb">
+                <a href="/">MHEnt. Docs</a>
+                <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+                <span>Nhật ký Phát hành</span>
+            </div>
+            <button class="btn-theme" onclick="toggleDarkMode()">
+                <i class="fa-solid fa-moon"></i> Giao diện Tối/Sáng
+            </button>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">Nhật Ký Phát Hành & Thay Đổi</h1>
+            <p class="page-desc">Theo dõi toàn bộ lịch sử nâng cấp, tính năng mới, cải tiến hiệu năng và bản sửa lỗi của các dự án phần mềm thuộc Miyazaki Haruto Entertainment Co., Ltd.</p>
+        </div>
+
+        <!-- Repo Selector Tabs -->
+        <div class="repo-tabs-container">
+            <div class="repo-tabs-label">Dự Án Trong Hệ Sinh Thái</div>
+            <div class="repo-tabs">
+                <div class="repo-tab active">
+                    <i class="fa-solid fa-rocket"></i>
+                    <span>mhentuniverse</span>
+                    <span class="repo-tab-tag">v3.0.0</span>
+                </div>
+                <div class="repo-tab repo-tab-soon" title="Dự án đang trong giai đoạn phát triển nội bộ">
+                    <i class="fa-solid fa-terminal"></i>
+                    <span>mhent-aisa-horizon</span>
+                    <span class="repo-tab-tag">v0.9.2</span>
+                    <span style="font-size: 11px;">(Sắp mở)</span>
+                </div>
+                <div class="repo-tab repo-tab-soon" title="Dự án đang trong giai đoạn phát triển nội bộ">
+                    <i class="fa-solid fa-id-badge"></i>
+                    <span>mhent-accounts</span>
+                    <span class="repo-tab-tag">v1.2.0</span>
+                    <span style="font-size: 11px;">(Sắp mở)</span>
+                </div>
+                <div class="repo-tab repo-tab-soon" title="Dự án đang trong giai đoạn phát triển nội bộ">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>mhent-aurora</span>
+                    <span class="repo-tab-tag">v1.0.1</span>
+                    <span style="font-size: 11px;">(Sắp mở)</span>
+                </div>
+                <div class="repo-tab repo-tab-soon" title="Dự án đang trong giai đoạn phát triển nội bộ">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>mhent-study</span>
+                    <span class="repo-tab-tag">v1.4.0</span>
+                    <span style="font-size: 11px;">(Sắp mở)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repository Metadata Banner -->
+        <div class="meta-banner">
+            <div class="meta-header">
+                <div class="meta-repo-name">
+                    <i class="fa-brands fa-github"></i>
+                    <span>Kho lưu trữ:</span>
+                    <code>mhentuniverse/mhentuniverse</code>
+                </div>
+                <div class="meta-badges">
+                    <span class="badge-live"><span class="badge-pulse"></span> Production Live</span>
+                    <span class="badge-ver">v3.0.0</span>
+                </div>
+            </div>
+            <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 14px;">
+                Cổng Đại Sảnh & Trục Vũ Trụ Số (Cinema, Games Arena, MHEnt Study, Smart Gateway, Trợ lý AISA).
+            </div>
+            <div class="meta-grid">
+                <div class="meta-stat">
+                    <span class="meta-stat-label">Phiên bản hiện tại</span>
+                    <span class="meta-stat-val"><code>v3.0.0</code></span>
+                </div>
+                <div class="meta-stat">
+                    <span class="meta-stat-label">Tổng số Commit</span>
+                    <span class="meta-stat-val"><i class="fa-solid fa-code-commit"></i> 896 Commits</span>
+                </div>
+                <div class="meta-stat">
+                    <span class="meta-stat-label">Cập nhật gần nhất</span>
+                    <span class="meta-stat-val"><i class="fa-regular fa-calendar-check"></i> 14/11/2026</span>
+                </div>
+                <div class="meta-stat">
+                    <span class="meta-stat-label">Nhánh triển khai</span>
+                    <span class="meta-stat-val"><i class="fa-solid fa-code-branch"></i> <code>main</code></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="filter-toolbar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="changelog-search" class="search-input" placeholder="Tìm kiếm phiên bản, tính năng, mã commit (vd: v3.0.0, i18n, caro, chess, admin...)" oninput="filterChangelog()">
+            </div>
+            <div class="filter-pills">
+                <span class="filter-label"><i class="fa-solid fa-filter"></i> Lọc loại thay đổi:</span>
+                <button class="filter-btn active" data-type="all" onclick="setFilterType('all')">Tất cả</button>
+                <button class="filter-btn" data-type="feat" onclick="setFilterType('feat')">🌟 Tính năng (feat)</button>
+                <button class="filter-btn" data-type="fix" onclick="setFilterType('fix')">🛠️ Sửa lỗi (fix)</button>
+                <button class="filter-btn" data-type="security" onclick="setFilterType('security')">🔒 Bảo mật (security)</button>
+                <button class="filter-btn" data-type="perf" onclick="setFilterType('perf')">⚡ Hiệu năng (perf)</button>
+                <button class="filter-btn" data-type="style" onclick="setFilterType('style')">🎨 Giao diện (style)</button>
+            </div>
+        </div>
+
+        <!-- Quick Jump Select -->
+        <div class="quick-jump-container">
+            <select class="quick-jump-select" onchange="jumpToVersion(this.value)">
+                <option value="">⚡ Nhảy nhanh tới phiên bản...</option>
+                <option value="v3.0.0">v3.0.0 (14/11/2026) - Mới nhất</option>
+                <option value="v2.9.0">v2.9.0 (10/11/2026)</option>
+                <option value="v2.8.0">v2.8.0 (09/11/2026)</option>
+                <option value="v2.7.0">v2.7.0 (08/11/2026)</option>
+                <option value="v2.6.0">v2.6.0 (07/11/2026)</option>
+                <option value="v2.5.0">v2.5.0 (01/11/2026)</option>
+                <option value="v2.4.0">v2.4.0 (30/10/2026)</option>
+                <option value="v2.2.0">v2.2.0 (15/10/2026)</option>
+                <option value="v2.0.0">v2.0.0 (08/10/2026)</option>
+                <option value="v1.8.0">v1.8.0 (25/09/2026)</option>
+                <option value="v1.5.0">v1.5.0 (22/08/2026)</option>
+                <option value="v1.2.0">v1.2.0 (10/06 - 29/07/2026)</option>
+                <option value="v1.0.0">v1.0.0 (14/03 - 14/05/2026)</option>
+            </select>
+        </div>
+
+        <!-- Changelog Timeline -->
+        <div class="timeline" id="timeline-container">
+
+            <!-- v3.0.0 -->
+            <div class="version-card is-latest" id="v3.0.0" data-version="v3.0.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v3.0.0</span>
+                        <span class="version-badge-latest"><i class="fa-solid fa-sparkles"></i> Mới nhất / Production</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 14 Tháng 11, 2026</div>
+                </div>
+                <div class="version-name">Đại Thống Nhất Hệ Sinh Thái & Động Cơ Định Danh i18n (The Grand Ecosystem & i18n Milestone)</div>
+                <div class="version-summary">
+                    Bản phát hành cột mốc v3.0.0 hoàn thiện chuẩn hóa toàn diện 83 trang giao diện của hệ sinh thái MHEnt Universe, ra mắt phân hệ trò chơi Caro Đấu Trí chuẩn hóa, cổng MHEnt Music Studio và khắc phục triệt để lỗi ghi đè danh tính người dùng khi chuyển đổi ngôn ngữ.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Phát hành trò chơi <strong>Caro Đấu Trí (15x15 Gomoku)</strong> với cấu trúc tệp tiêu chuẩn (<code>game/caro/index.html</code> sảnh phòng và <code>game/caro/play.html</code> đấu trường), đồng bộ motif giao diện với Cờ Vua / Cờ Tướng và tích hợp Trợ lý Trí tuệ Nhân tạo AISA Bot (Echo / Harmony). <a href="https://github.com/mhentuniverse/mhentuniverse/commit/de506db" target="_blank" class="commit-chip">commit de506db</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/aee4445" target="_blank" class="commit-chip">commit aee4445</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Khởi chạy cổng chính thức <strong>MHEnt Music Studio</strong> (<code>music/index.html</code>) với khả năng định tuyến Clean URL (<code>/music</code>) trên nền tảng Vercel. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/6dcafb4" target="_blank" class="commit-chip">commit 6dcafb4</a></span>
+                    </li>
+                    <li class="change-item" data-type="fix">
+                        <span class="tag-badge tag-fix">FIX</span>
+                        <span class="change-text">Cơ chế <strong>Bảo vệ Danh tính Người dùng i18n</strong> (<code>isProtectedUserElement</code>, phát sự kiện <code>mhent:langchange</code> và nhãn <code>data-i18n-skip</code>), khắc phục hoàn toàn hiện tượng tên tài khoản bị dịch đè thành chữ "Đang tải / Loading..." khi đổi ngôn ngữ. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/63fb851" target="_blank" class="commit-chip">commit 63fb851</a></span>
+                    </li>
+                    <li class="change-item" data-type="fix">
+                        <span class="tag-badge tag-fix">FIX</span>
+                        <span class="change-text">Tiêm trực tiếp <strong>Universal UI Toggle Fallbacks</strong> cho các hàm giao diện toàn cục (<code>toggleDarkMode()</code>, <code>toggleAppSwitcher()</code>, <code>toggleAccount()</code>, <code>toggleMobileMenu()</code>) trong thư viện lõi <code>mhent-ui.js</code>, giải quyết triệt để lỗi không bấm được nút trên 9 trang phụ. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/f9e8163" target="_blank" class="commit-chip">commit f9e8163</a></span>
+                    </li>
+                    <li class="change-item" data-type="fix">
+                        <span class="tag-badge tag-fix">FIX</span>
+                        <span class="change-text">Sửa lỗi sai tên hàm <code>removeMovieFromLibrary</code> trong rạp chiếu Cinema (<code>cinema/library.html</code>) và gán đúng định danh thẻ phim <code>id="lib-card-${movieId}"</code>. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/f9e8163" target="_blank" class="commit-chip">commit f9e8163</a></span>
+                    </li>
+                    <li class="change-item" data-type="fix">
+                        <span class="tag-badge tag-fix">FIX</span>
+                        <span class="change-text">Khôi phục giao diện đấu trường 3 cột E-Sport chuyên nghiệp cho <strong>Cờ Vua</strong> (<code>game/chess/play.html</code>) hoàn toàn đồng bộ với Cờ Tướng. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/9dc5c61" target="_blank" class="commit-chip">commit 9dc5c61</a></span>
+                    </li>
+                    <li class="change-item" data-type="security">
+                        <span class="tag-badge tag-security">SECURITY</span>
+                        <span class="change-text">Khắc phục lỗi <code>ReferenceError: email is not defined</code> và gia cố cơ chế xác thực phân quyền Root Admin tối cao trên toàn bộ bảng điều khiển Cờ Vua và Cờ Tướng (<code>game/chess/admin/</code>, <code>game/xiangqi/admin/</code>). <a href="https://github.com/mhentuniverse/mhentuniverse/commit/3463ab0" target="_blank" class="commit-chip">commit 3463ab0</a></span>
+                    </li>
+                    <li class="change-item" data-type="fix">
+                        <span class="tag-badge tag-fix">FIX</span>
+                        <span class="change-text">Rà soát toàn diện QA dự án: dọn sạch 100% CSS orphan classes, đóng kín các thẻ modal unclosed và chuẩn hóa liên kết điều hướng trên toàn bộ 83 tệp HTML. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/450a4c7" target="_blank" class="commit-chip">commit 450a4c7</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/94cd491" target="_blank" class="commit-chip">commit 94cd491</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v2.9.0 -->
+            <div class="version-card" id="v2.9.0" data-version="v2.9.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v2.9.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 10 Tháng 11, 2026</div>
+                </div>
+                <div class="version-name">Động Cơ Đa Ngôn Ngữ Toàn Cầu (Global Tri-Lingual Engine)</div>
+                <div class="version-summary">
+                    Triển khai hạ tầng dịch thuật 3 ngôn ngữ toàn diện kết nối người dùng quốc tế trên toàn bộ hệ thống các trang web.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Triển khai engine đa ngôn ngữ (Tiếng Việt 🇻🇳, Tiếng Nhật 🇯🇵, Tiếng Anh 🇺🇸) trên 80+ trang web với thuật toán tự động nhận diện DOM thông minh (<code>mhent-i18n.js</code>). <a href="https://github.com/mhentuniverse/mhentuniverse/commit/0176406" target="_blank" class="commit-chip">commit 0176406</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Đồng bộ hóa ngôn ngữ người dùng xuyên suốt các tên miền con (<code>.mhentuniverse.com</code>) qua Cookie cấp cao <code>mhent_lang</code>. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/051ed68" target="_blank" class="commit-chip">commit 051ed68</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Dịch sâu toàn bộ các phân hệ phức tạp: Cinema Player, Đấu trường Game Arena, Trợ lý AISA Assistant và hệ thống thông báo Toast Alerts. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/01e1422" target="_blank" class="commit-chip">commit 01e1422</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v2.8.0 -->
+            <div class="version-card" id="v2.8.0" data-version="v2.8.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v2.8.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 09 Tháng 11, 2026</div>
+                </div>
+                <div class="version-name">Đấu Trường Lớp Học Bingo Master & Nâng Cấp Giáo Dục</div>
+                <div class="version-summary">
+                    Nâng cấp phân hệ MHEnt Study với trò chơi tương tác giáo dục Bingo Master thế hệ mới.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Ra mắt trò chơi tương tác lớp học <strong>Bingo Master</strong> (<code>teach/bingo.html</code>) tích hợp bộ quay số ngẫu nhiên, hiệu ứng âm thanh hồi hộp Suspense Drumroll, công nghệ Text-to-Speech (TTS) đọc số đa ngôn ngữ và trình tạo phiếu in PDF. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/69fdfa1" target="_blank" class="commit-chip">commit 69fdfa1</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tích hợp đồng bộ cơ sở dữ liệu đám mây MHEnt Cloud Database Sync và đồng bộ người dẫn chương trình theo thời gian thực (Presenter Sync). <a href="https://github.com/mhentuniverse/mhentuniverse/commit/1f41ebb" target="_blank" class="commit-chip">commit 1f41ebb</a></span>
+                    </li>
+                    <li class="change-item" data-type="style">
+                        <span class="tag-badge tag-style">STYLE</span>
+                        <span class="change-text">Cơ chế dynamic text scaling và chống ngắt từ gãy dòng chữ (anti-split word wrapping) trên ô cờ Bingo. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/6d223dd" target="_blank" class="commit-chip">commit 6d223dd</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v2.7.0 -->
+            <div class="version-card" id="v2.7.0" data-version="v2.7.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v2.7.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 08 Tháng 11, 2026</div>
+                </div>
+                <div class="version-name">Cổng Chuyển Hướng Thông Minh MHEnt Universal Gateway</div>
+                <div class="version-summary">
+                    Ra mắt giải pháp rút gọn liên kết, bảo vệ bản quyền nội dung và điều phối lưu lượng truy cập.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Phát hành hệ thống <strong>MHEnt Smart Gateway</strong> (<code>tools/links/</code>) với cổng công khai có hẹn giờ và cổng xác thực người dùng MHEnt ID. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/246630e" target="_blank" class="commit-chip">commit 246630e</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tự động nhận diện nền tảng lưu trữ tệp (Google Drive, YouTube, OneDrive, Mega, Box) kèm phân loại nội dung Universe. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/f87b85f" target="_blank" class="commit-chip">commit f87b85f</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Bộ đếm ngược thời gian thực (Countdown Redirect) hỗ trợ tạm dừng, tiếp tục và tự động chuyển hướng. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/1f2273e" target="_blank" class="commit-chip">commit 1f2273e</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Bộ tạo liên kết kép (Dual-Mode Creator) với chế độ tạo nhanh và tùy biến cổng nâng cao. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/ce7c6c0" target="_blank" class="commit-chip">commit ce7c6c0</a></span>
+                    </li>
+                    <li class="change-item" data-type="security">
+                        <span class="tag-badge tag-security">SECURITY</span>
+                        <span class="change-text">Cơ chế phân quyền sở hữu liên kết của người tạo (Creator Ownership) và quản trị viên Admin. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/db73106" target="_blank" class="commit-chip">commit db73106</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v2.6.0 -->
+            <div class="version-card" id="v2.6.0" data-version="v2.6.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v2.6.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 07 Tháng 11, 2026</div>
+                </div>
+                <div class="version-name">Phân Hệ Cinema Collab Crossover & Bảo Vệ Cổng Rạp Chiếu</div>
+                <div class="version-summary">
+                    Nâng cấp toàn diện rạp chiếu phim MHEnt Cinema cho các sự kiện hợp tác đặc biệt.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Hỗ trợ phân loại và tạo kiểu độc quyền cho các tập phim Crossover / Collab đặc biệt trong danh sách phát và trang xem phim. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/6a84919" target="_blank" class="commit-chip">commit 6a84919</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tích hợp nút chuyển đổi một chạm chế độ Collab trong Cinema Studio và Cinema Admin. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/d674489" target="_blank" class="commit-chip">commit d674489</a></span>
+                    </li>
+                    <li class="change-item" data-type="security">
+                        <span class="tag-badge tag-security">SECURITY</span>
+                        <span class="change-text">Triển khai Cinema Gatekeeper yêu cầu xác thực tài khoản trước khi truy cập nội dung rạp chiếu bảo mật. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/3534522" target="_blank" class="commit-chip">commit 3534522</a></span>
+                    </li>
+                    <li class="change-item" data-type="security">
+                        <span class="tag-badge tag-security">SECURITY</span>
+                        <span class="change-text">Đồng bộ quyền Firestore Security Rules cho kho phim, báo cáo người dùng và danh sách Root Admin. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/f384698" target="_blank" class="commit-chip">commit f384698</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/ffa575f" target="_blank" class="commit-chip">commit ffa575f</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v2.5.0 -->
+            <div class="version-card" id="v2.5.0" data-version="v2.5.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v2.5.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 01 Tháng 11, 2026</div>
+                </div>
+                <div class="version-name">Cổng Phần Mềm MHEnt Software Hub & Trình Duyệt Aurora</div>
+                <div class="version-summary">
+                    Mở rộng hệ sinh thái số sang lĩnh vực phát triển phần mềm và công nghệ web.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Ra mắt trung tâm phần mềm <strong>MHEnt Universe Software Hub</strong> giới thiệu các công nghệ phần mềm thế hệ tiếp theo. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/7113dff" target="_blank" class="commit-chip">commit 7113dff</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Công bố dự án trình duyệt web <strong>MHEnt Aurora Browser</strong> thế hệ mới tối ưu cho nội dung đa phương tiện và bảo mật danh tính. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/3f61268" target="_blank" class="commit-chip">commit 3f61268</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Giới thiệu môi trường lập trình đám mây <strong>AISA Horizon</strong> và không gian làm việc trí tuệ nhân tạo <strong>AISA Orbit</strong>. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/7113dff" target="_blank" class="commit-chip">commit 7113dff</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v2.4.0 -->
+            <div class="version-card" id="v2.4.0" data-version="v2.4.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v2.4.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 30 Tháng 10, 2026</div>
+                </div>
+                <div class="version-name">Hệ Thống Điểm Danh Toàn Diện RSVP Check-in Hub V2</div>
+                <div class="version-summary">
+                    Nâng cấp giải pháp số hóa quản lý sự kiện và điểm danh hội nghị chuyên nghiệp.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Phân tách bảng điều khiển phiên sự kiện thành hai luồng độc lập: Bảng thành viên chính thức và Bảng khách mời ngoại giao với tỷ lệ tham dự riêng biệt. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/f709ff2" target="_blank" class="commit-chip">commit f709ff2</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Hỗ trợ xuất dữ liệu Excel đa bảng tính (Multi-section Excel export) tự động phân nhóm theo vai trò và đánh số thứ tự liền mạch. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/67864bd" target="_blank" class="commit-chip">commit 67864bd</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tích hợp mã QR động chống chụp ảnh màn hình điểm danh hộ (Dynamic Anti-Proxy QR code) và bảo vệ dữ liệu nhạy cảm của khách mời. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/a6d79af" target="_blank" class="commit-chip">commit a6d79af</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Cung cấp giao diện Kiosk tự điểm danh tại sảnh sự kiện và công cụ tra cứu vé điện tử thời gian thực. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/d86f0c1" target="_blank" class="commit-chip">commit d86f0c1</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/62716ca" target="_blank" class="commit-chip">commit 62716ca</a></span>
+                    </li>
+                    <li class="change-item" data-type="perf">
+                        <span class="tag-badge tag-perf">PERF</span>
+                        <span class="change-text">Hệ thống nạp thư viện SheetJS đa máy chủ CDN dự phòng (Multi-CDN Fallback) đảm bảo tính năng xuất Excel hoạt động 100% không gián đoạn. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/0bb26bc" target="_blank" class="commit-chip">commit 0bb26bc</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v2.2.0 -->
+            <div class="version-card" id="v2.2.0" data-version="v2.2.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v2.2.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 15 Tháng 10, 2026</div>
+                </div>
+                <div class="version-name">Dịch Vụ Thư Điện Tử Xác Thực Tùy Biến (Custom Branded Auth & Mailer)</div>
+                <div class="version-summary">
+                    Xây dựng cổng xử lý email bảo mật mang nhận diện thương hiệu chính thức của công ty.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Phát hành API gửi email xác thực tài khoản tùy biến mang thương hiệu công ty kết hợp Firebase Admin SDK và máy chủ Nodemailer SMTP (<code>accounts.mhentuniverse.com/auth-action.html</code>). <a href="https://github.com/mhentuniverse/mhentuniverse/commit/03040ee" target="_blank" class="commit-chip">commit 03040ee</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tự động tra cứu và hiển thị họ tên người dùng (<code>displayName</code>) cùng thẻ tài khoản nhận diện trực quan trên trang xác thực. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/e55b2ca" target="_blank" class="commit-chip">commit e55b2ca</a></span>
+                    </li>
+                    <li class="change-item" data-type="security">
+                        <span class="tag-badge tag-security">SECURITY</span>
+                        <span class="change-text">Áp dụng thư viện mã hóa bảo mật Node.js native crypto thay thế thư viện bên thứ ba và tối ưu hóa xử lý CORS preflight. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/39c59f2" target="_blank" class="commit-chip">commit 39c59f2</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/0522c0c" target="_blank" class="commit-chip">commit 0522c0c</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Thêm chữ ký số thương hiệu của công ty và cấu hình địa chỉ phản hồi tự động <code>noreply@mhentuniverse.com</code> và <code>support@mhentuniverse.com</code>. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/c685d23" target="_blank" class="commit-chip">commit c685d23</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/29f9924" target="_blank" class="commit-chip">commit 29f9924</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v2.0.0 -->
+            <div class="version-card" id="v2.0.0" data-version="v2.0.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v2.0.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 08 Tháng 10, 2026</div>
+                </div>
+                <div class="version-name">Đại Tu Kiến Trúc Quản Trị Phân Hệ Doanh Nghiệp (Enterprise Studio & Admin Overhaul)</div>
+                <div class="version-summary">
+                    Cải tổ toàn bộ hệ thống quản trị chuyên sâu và phòng sản xuất nội dung số.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Đại tu bảng điều khiển Admin và Studio trên toàn bộ các phân hệ: Rạp chiếu phim Cinema, Đấu trường Game Arena và Không gian học tập Study. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/cd44dbe" target="_blank" class="commit-chip">commit cd44dbe</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/88f3909" target="_blank" class="commit-chip">commit 88f3909</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tối ưu cơ chế đăng nhập một lần (SSO) liên kết sâu vào ứng dụng giáo dục MHEnt Study. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/548b3a2" target="_blank" class="commit-chip">commit 548b3a2</a></span>
+                    </li>
+                    <li class="change-item" data-type="style">
+                        <span class="tag-badge tag-style">STYLE</span>
+                        <span class="change-text">Tiêu chuẩn hóa ngôn ngữ thiết kế giao diện: Bảng màu Cyber-Navy với đường viền tương phản cao và khắc phục khoảng hở chân trang trên thiết bị di động. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/88f3909" target="_blank" class="commit-chip">commit 88f3909</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/b63093d" target="_blank" class="commit-chip">commit b63093d</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v1.8.0 -->
+            <div class="version-card" id="v1.8.0" data-version="v1.8.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v1.8.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 25 Tháng 09, 2026</div>
+                </div>
+                <div class="version-name">Trợ Lý Ảo AISA Universe Companion & Chân Trang Premier Mega Footer</div>
+                <div class="version-summary">
+                    Ra mắt trợ lý trí tuệ nhân tạo toàn diện và đồng bộ chân trang xuyên suốt hệ sinh thái.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tích hợp tiện ích trợ lý ảo <strong>AISA Companion Widget</strong> vào toàn bộ các phân hệ của MHEnt Universe, hỗ trợ tương tác hội thoại trực tiếp. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/1fe730d" target="_blank" class="commit-chip">commit 1fe730d</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Hỗ trợ định dạng văn bản Markdown phong phú trong khung chat AISA (chữ đậm, in nghiêng, ngắt dòng, danh sách gạch đầu dòng và ô nhập văn bản nhiều dòng). <a href="https://github.com/mhentuniverse/mhentuniverse/commit/338b3ce" target="_blank" class="commit-chip">commit 338b3ce</a></span>
+                    </li>
+                    <li class="change-item" data-type="style">
+                        <span class="tag-badge tag-style">STYLE</span>
+                        <span class="change-text">Đồng bộ chân trang cao cấp <strong>Premier Mega Footer</strong> với biểu tượng vector SVG sắc nét trên toàn bộ các trang web. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/ed7037e" target="_blank" class="commit-chip">commit ed7037e</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/e954aea" target="_blank" class="commit-chip">commit e954aea</a></span>
+                    </li>
+                    <li class="change-item" data-type="perf">
+                        <span class="tag-badge tag-perf">PERF</span>
+                        <span class="change-text">Giải thuật chống chớp trắng (Anti-FOUC) đồng bộ trạng thái giao diện Sáng/Tối xuyên suốt các tên miền con qua Cookie. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/ac0f08a" target="_blank" class="commit-chip">commit ac0f08a</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/a2a1f81" target="_blank" class="commit-chip">commit a2a1f81</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v1.5.0 -->
+            <div class="version-card" id="v1.5.0" data-version="v1.5.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v1.5.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 22 Tháng 08, 2026</div>
+                </div>
+                <div class="version-name">Tái Cơ Cấu Thư Mục Dự Án & Tiện Ích Lõi (Core Modular Refactoring)</div>
+                <div class="version-summary">
+                    Tái cấu trúc quy mô lớn hệ thống tệp và mô-đun dùng chung để đáp ứng việc mở rộng nhanh chóng.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="refactor">
+                        <span class="tag-badge tag-refactor">REFACTOR</span>
+                        <span class="change-text">Tổ chức lại cấu trúc thư mục toàn dự án, tập trung hóa thư mục tài nguyên chung (<code>assets</code>), các tiện ích JavaScript lõi (<code>mhent-ui.js</code>) và phân tách các mô-đun trò chơi con. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/b78652b" target="_blank" class="commit-chip">commit b78652b</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Nâng cấp hệ thống đóng gói nội dung động N-Level Dynamic Packaging và quản lý kho vật phẩm Inventory. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/a7bfc3f" target="_blank" class="commit-chip">commit a7bfc3f</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/2562104" target="_blank" class="commit-chip">commit 2562104</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Chuẩn hóa nhận diện thương hiệu pháp nhân: Miyazaki Haruto Entertainment Co., Ltd. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/e8676dc" target="_blank" class="commit-chip">commit e8676dc</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v1.2.0 -->
+            <div class="version-card" id="v1.2.0" data-version="v1.2.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v1.2.0</span>
+                        <span class="version-badge-stable">Stable</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 10 Tháng 06 - 29 Tháng 07, 2026</div>
+                </div>
+                <div class="version-name">Đấu Trường Trò Chơi Trí Tuệ & Phân Hệ Lớp Học (Interactive Arcade Hub)</div>
+                <div class="version-summary">
+                    Xây dựng nền tảng trò chơi giáo dục và đấu trường cờ trực tuyến.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Phát hành các trò chơi tương tác giáo dục: Trò chơi xếp chữ Unscramble Word Game và Trắc nghiệm lớp học Classroom Quiz với bảng xếp hạng điểm số trực tiếp. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/1f3b4dd" target="_blank" class="commit-chip">commit 1f3b4dd</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/d23b243" target="_blank" class="commit-chip">commit d23b243</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/ffbd9f6" target="_blank" class="commit-chip">commit ffbd9f6</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Xây dựng nền móng đấu trường thể thao điện tử trí tuệ cho <strong>Cờ Tướng (Xiangqi)</strong> và <strong>Cờ Vua (Chess)</strong> với hệ thống phòng chờ và mã PIN tham gia trận đấu. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/b557d16" target="_blank" class="commit-chip">commit b557d16</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/51a808f" target="_blank" class="commit-chip">commit 51a808f</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tích hợp dịch vụ gửi thư điện tử tự động phục vụ các thông báo của hệ thống (Mailer Service). <a href="https://github.com/mhentuniverse/mhentuniverse/commit/1b3c2ea" target="_blank" class="commit-chip">commit 1b3c2ea</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/502435c" target="_blank" class="commit-chip">commit 502435c</a></span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- v1.0.0 -->
+            <div class="version-card" id="v1.0.0" data-version="v1.0.0">
+                <div class="timeline-node"></div>
+                <div class="version-header">
+                    <div class="version-title-group">
+                        <span class="version-tag">v1.0.0</span>
+                        <span class="version-badge-stable">Genesis</span>
+                    </div>
+                    <div class="version-date"><i class="fa-regular fa-calendar"></i> 14 Tháng 03 - 14 Tháng 05, 2026</div>
+                </div>
+                <div class="version-name">Khởi Nguyên Vũ Trụ Số MHEnt Universe (Genesis Foundation)</div>
+                <div class="version-summary">
+                    Ra mắt nền móng đầu tiên của đế chế giải trí và học tập kỹ thuật số Miyazaki Haruto Entertainment Co., Ltd.
+                </div>
+                <ul class="change-list">
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Ra mắt Cổng xem phim trực tuyến <strong>MHEnt Cinema V9 Player</strong> với trình phát video chất lượng cao, thư viện tác phẩm và rạp chiếu kỹ thuật số. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/0556c61" target="_blank" class="commit-chip">commit 0556c61</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/d3adb97" target="_blank" class="commit-chip">commit d3adb97</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Tích hợp hệ thống quản lý danh tính và đăng nhập MHEnt ID dựa trên nền tảng đám mây Firebase Authentication. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/c8a10dd" target="_blank" class="commit-chip">commit c8a10dd</a> <a href="https://github.com/mhentuniverse/mhentuniverse/commit/6a374dd" target="_blank" class="commit-chip">commit 6a374dd</a></span>
+                    </li>
+                    <li class="change-item" data-type="feat">
+                        <span class="tag-badge tag-feat">FEAT</span>
+                        <span class="change-text">Khởi chạy Cổng thông tin chính thức MHEnt Universe Portal kết nối không gian anime, âm nhạc, văn hóa đại chúng và công nghệ. <a href="https://github.com/mhentuniverse/mhentuniverse/commit/eae70fa" target="_blank" class="commit-chip">commit eae70fa</a></span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div id="empty-state" class="empty-state">
+            <i class="fa-solid fa-folder-open"></i>
+            <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 4px;">Không tìm thấy kết quả phù hợp</div>
+            <div style="font-size: 13px;">Hãy thử tìm kiếm với từ khóa khác (ví dụ: v3.0.0, i18n, caro, chess, admin...) hoặc chọn bộ lọc "Tất cả".</div>
+        </div>
+
+    </main>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.documentElement.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('mhent_docs_theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('mhent_dark_mode', isDark ? 'on' : 'off');
+            document.cookie = `mhent_dark_mode=${isDark ? 'on' : 'off'}; domain=.mhentuniverse.com; path=/; max-age=31536000; SameSite=Lax`;
+        }
+        if (document.documentElement.classList.contains('dark-mode') || localStorage.getItem('mhent_dark_mode') === 'on' || localStorage.getItem('mhent_docs_theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        let activeType = 'all';
+
+        function setFilterType(type) {
+            activeType = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-type') === type) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            filterChangelog();
+        }
+
+        function filterChangelog() {
+            const query = (document.getElementById('changelog-search').value || '').trim().toLowerCase();
+            const cards = document.querySelectorAll('.version-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const version = (card.getAttribute('data-version') || '').toLowerCase();
+                const textContent = card.innerText.toLowerCase();
+                const items = card.querySelectorAll('.change-item');
+                let hasMatchingItem = false;
+
+                items.forEach(item => {
+                    const itemType = item.getAttribute('data-type');
+                    const itemText = item.innerText.toLowerCase();
+                    const typeMatches = (activeType === 'all' || itemType === activeType);
+                    const queryMatches = (!query || itemText.includes(query) || version.includes(query));
+
+                    if (typeMatches && queryMatches) {
+                        item.style.display = 'flex';
+                        hasMatchingItem = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                if (hasMatchingItem || (!query && activeType === 'all')) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const emptyState = document.getElementById('empty-state');
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        function jumpToVersion(versionId) {
+            if (!versionId) return;
+            const target = document.getElementById(versionId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                target.style.transition = 'transform 0.3s, box-shadow 0.3s';
+                target.style.transform = 'translateY(-4px)';
+                target.style.boxShadow = '0 10px 25px -5px rgba(37, 99, 235, 0.2)';
+                setTimeout(() => {
+                    target.style.transform = '';
+                    target.style.boxShadow = '';
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
